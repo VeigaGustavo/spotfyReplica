@@ -2,6 +2,7 @@ import React from "react";
 import SongItem from "./SongItem";
 import { useState } from "react";
 
+// eslint-disable-next-line react/prop-types
 const SongList = ({ songsArray }) => {
   // const items = 5;
   const [items, setItems] = useState(5);
