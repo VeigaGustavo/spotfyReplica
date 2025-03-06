@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "front-end/node_modules/.bin/vite",
+    "build": "front-end/node_modules/.bin/vite build",
+    "lint": "front-end/node_modules/.bin/eslint .",
+    "preview": "front-end/node_modules/.bin/vite preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
