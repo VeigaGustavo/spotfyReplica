@@ -8,5 +8,6 @@ export default defineConfig({
     mimeTypes: {
       'application/javascript': ['jsx']
     }
-  }
+  },
+  base: process.env.VITE_BASE_PATH || “/spotfyReplica”,
 });
