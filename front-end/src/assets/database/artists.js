@@ -1,3 +1,5 @@
-import { artistArray } from "../../../api/api.js";
+import { fetchArtists } from "../../../api/api.js";
 
-export { artistArray };
+export const getArtists = async () => {
+  return await fetchArtists();
+};

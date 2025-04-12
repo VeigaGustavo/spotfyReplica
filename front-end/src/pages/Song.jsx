@@ -1,67 +1,97 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Player from "../components/Player";
 import { Link, useParams } from "react-router-dom";
-import { songsArray } from "../assets/database/songs";
-import { artistArray } from "../assets/database/artists";
+import { getSongs } from "../assets/database/songs";
+import { getArtists } from "../assets/database/artists";
 
 const Song = () => {
   const { id } = useParams();
-  // console.log(id);
+  const [song, setSong] = useState(null);
+  const [artist, setArtist] = useState(null);
+  const [artistSongs, setArtistSongs] = useState([]);
+  const [randomSongs, setRandomSongs] = useState({ first: null, second: null });
+  const [loading, setLoading] = useState(true);
 
-  const { image, name, duration, artist, audio } = songsArray.filter(
-    (currentSongObj) => currentSongObj._id === id
-  )[0];
-  // console.log(songObj);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [songs, artists] = await Promise.all([
+          getSongs(),
+          getArtists()
+        ]);
 
-  const artistObj = artistArray.filter(
-    (currentArtistObj) => currentArtistObj.name === artist
-  )[0];
-  // console.log(artistObj);
+        const currentSong = songs.find(
+          (songObj) => songObj._id === id
+        );
 
-  const songsArrayFromArtist = songsArray.filter(
-    (currentSongObj) => currentSongObj.artist === artist
-  );
-  // console.log(songsArrayFromArtist);
+        if (currentSong) {
+          setSong(currentSong);
+          
+          const currentArtist = artists.find(
+            (artistObj) => artistObj.name === currentSong.artist
+          );
+          setArtist(currentArtist);
 
-  const randomIndex = Math.floor(
-    Math.random() * (songsArrayFromArtist.length - 1)
-  );
+          const artistSongs = songs.filter(
+            (songObj) => songObj.artist === currentSong.artist
+          );
+          setArtistSongs(artistSongs);
 
-  const randomIndex2 = Math.floor(
-    Math.random() * (songsArrayFromArtist.length - 1)
-  );
+          if (artistSongs.length > 0) {
+            const randomIndex1 = Math.floor(Math.random() * artistSongs.length);
+            let randomIndex2;
+            do {
+              randomIndex2 = Math.floor(Math.random() * artistSongs.length);
+            } while (randomIndex2 === randomIndex1);
 
-  const randomIdFromArtist = songsArrayFromArtist[randomIndex]._id;
-  const randomId2FromArtist = songsArrayFromArtist[randomIndex2]._id;
+            setRandomSongs({
+              first: artistSongs[randomIndex1]._id,
+              second: artistSongs[randomIndex2]._id
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (loading || !song || !artist) {
+    return <div className="song">Loading...</div>;
+  }
 
   return (
     <div className="song">
       <div className="song__container">
         <div className="song__image-container">
-          <img src={image} alt={`Imagem da música ${name}`} />
+          <img src={song.image} alt={`Imagem da música ${song.name}`} />
         </div>
       </div>
 
       <div className="song__bar">
-        <Link to={`/artist/${artistObj._id}`} className="song__artist-image">
+        <Link to={`/artist/${artist._id}`} className="song__artist-image">
           <img
             width={75}
             height={75}
-            src={artistObj.image}
-            alt={`Imagem do Artista ${artist}`}
+            src={artist.image}
+            alt={`Imagem do Artista ${song.artist}`}
           />
         </Link>
 
         <Player
-          duration={duration}
-          randomIdFromArtist={randomIdFromArtist}
-          randomId2FromArtist={randomId2FromArtist}
-          audio={audio}
+          duration={song.duration}
+          randomIdFromArtist={randomSongs.first}
+          randomId2FromArtist={randomSongs.second}
+          audio={song.audio}
         />
 
         <div>
-          <p className="song__name">{name}</p>
-          <p>{artist}</p>
+          <p className="song__name">{song.name}</p>
+          <p>{song.artist}</p>
         </div>
       </div>
     </div>

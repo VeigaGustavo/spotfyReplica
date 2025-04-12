@@ -1,3 +1,5 @@
-import { songsArray } from "../../../api/api.js";
+import { fetchSongs } from "../../../api/api.js";
 
-export { songsArray };
+export const getSongs = async () => {
+  return await fetchSongs();
+};

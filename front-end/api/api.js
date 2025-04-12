@@ -2,8 +2,25 @@ import axios from "axios";
 
 const URL = "http://localhost:3000";
 
-const responseArtists = await axios.get(`${URL}/artists`);
-const responseSongs = await axios.get(`${URL}/songs`);
+export const fetchArtists = async () => {
+  const response = await axios.get(`${URL}/artists`);
+  return response.data;
+};
 
-export const artistArray = responseArtists.data;
-export const songsArray = responseSongs.data;
+export const fetchSongs = async () => {
+  const response = await axios.get(`${URL}/songs`);
+  return response.data;
+};
+
+export const getInitialData = async () => {
+  try {
+    const [artists, songs] = await Promise.all([
+      fetchArtists(),
+      fetchSongs()
+    ]);
+    return { artists, songs };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return { artists: [], songs: [] };
+  }
+};
