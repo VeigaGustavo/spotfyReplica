@@ -131,10 +131,6 @@ Contribuições são bem-vindas! Siga estes passos:
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
 ## ✨ Autor
 
 - **Gustavo Antunes** - [GitHub](https://github.com/gustavoantunes)
